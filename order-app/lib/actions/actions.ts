@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { saveMeal } from '../db/db';
 import { Meal } from '../types/app.type';
@@ -46,6 +47,7 @@ export async function shareMeal(_previousState: unknown, formData: FormData) {
     };
   } finally {
     if (redirectPath) {
+      revalidatePath('/meals');
       redirect(redirectPath);
     }
   }
