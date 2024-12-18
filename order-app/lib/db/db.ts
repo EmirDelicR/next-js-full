@@ -11,3 +11,9 @@ export async function getMeals() {
 export function getMeal(id: string) {
   return db.prepare<string, Meal>('SELECT * FROM meals WHERE id = ?').get(id);
 }
+
+export async function saveMeal(meal: Meal) {
+  db.prepare<Meal, Meal>(
+    'INSERT INTO meals (title, summary, slug) VALUES (@title, @summary, @slug)'
+  ).run(meal);
+}
