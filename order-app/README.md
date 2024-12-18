@@ -48,3 +48,21 @@ This template comes with the following features:
 `route.js` => Allows you to create an API route (i.e., a page which does NOT return JSX code but instead data, e.g., in the JSON format)
 
 You also find a list with all supported filenames & detailed explanations in the official docs: https://nextjs.org/docs/app/api-reference/file-conventions
+
+### Data Base
+
+[better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
+
+[better-sqlite3-types](https://www.npmjs.com/package/@types/better-sqlite3)
+
+```console
+yarn add better-sqlite3
+
+yarn add @types/better-sqlite3 -D
+```
+
+Create `initdb.js` file and run
+
+```console
+node initdb.js
+```
