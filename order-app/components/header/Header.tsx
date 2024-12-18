@@ -6,7 +6,7 @@ import NavLink from '../link/NavLink';
 export default function Header() {
   return (
     <Flex p="md" justify="space-between">
-      <Image src={logo} alt="logo" width="50" height="50" />
+      <Image src={logo} alt="logo" width="50" height="50" placeholder="empty" />
       <Group>
         <NavLink href="/">Home</NavLink>
         <NavLink href="/meals">Meals</NavLink>
