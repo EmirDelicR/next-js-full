@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { saveMeal } from '../db/db';
 import { Meal } from '../types/app.type';
+import { DEFAULT_MEAL_STATE } from './constants';
 
 const validateField = (text: string, field: 'Title' | 'Summary' | 'Slug') => {
   return !text || text.trim() === '' ? `${field} must be set!` : null;
@@ -19,7 +20,7 @@ export async function shareMeal(_previousState: unknown, formData: FormData) {
     summary: validateField(summary, 'Summary'),
     slug: validateField(slug, 'Slug'),
   };
-  const meal: Meal = {
+  const item: Meal = {
     title,
     summary,
     slug,
@@ -27,22 +28,21 @@ export async function shareMeal(_previousState: unknown, formData: FormData) {
 
   if (validationError.title || validationError.summary || validationError.slug) {
     return {
-      message: null,
+      ...DEFAULT_MEAL_STATE,
       messages: { ...validationError },
-      isError: false,
-      meal,
+      item,
     };
   }
 
   try {
-    await saveMeal(meal);
+    await saveMeal(item);
     redirectPath = '/meals';
   } catch (err) {
     return {
+      ...DEFAULT_MEAL_STATE,
       message: `Error occurred: ${err}`,
-      messages: { ...validationError },
       isError: true,
-      meal,
+      item,
     };
   } finally {
     if (redirectPath) {

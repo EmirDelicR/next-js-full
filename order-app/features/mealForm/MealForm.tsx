@@ -4,9 +4,10 @@ import { useActionState } from 'react';
 import Form from 'next/form';
 import { Alert, Button, Stack, Textarea, TextInput } from '@mantine/core';
 import { shareMeal } from '@/lib/actions/actions';
+import { DEFAULT_MEAL_STATE } from '@/lib/actions/constants';
 
 export default function MealForm() {
-  const [state, formAction, isPending] = useActionState(shareMeal, null);
+  const [state, formAction, isPending] = useActionState(shareMeal, DEFAULT_MEAL_STATE);
 
   return (
     <Form action={formAction}>
@@ -16,7 +17,7 @@ export default function MealForm() {
           withAsterisk
           label="Title"
           placeholder="Meal title"
-          defaultValue={state?.meal?.title || ''}
+          defaultValue={state?.item?.title}
           error={state?.messages?.title}
         />
         <TextInput
@@ -25,7 +26,7 @@ export default function MealForm() {
           placeholder="Slug"
           name="slug"
           description="Add specific slug to meal for easy recognition."
-          defaultValue={state?.meal?.slug || ''}
+          defaultValue={state?.item?.slug}
           error={state?.messages?.slug}
         />
         <Textarea
@@ -34,7 +35,7 @@ export default function MealForm() {
           name="summary"
           description="Add summary about this meal"
           placeholder="Summary"
-          defaultValue={state?.meal?.summary || ''}
+          defaultValue={state?.item?.summary}
           error={state?.messages?.summary}
         />
         <Button type="submit" disabled={isPending}>
