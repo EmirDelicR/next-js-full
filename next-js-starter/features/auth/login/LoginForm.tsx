@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Form from 'next/form';
 import {
   Button,
   Container,
@@ -12,7 +13,7 @@ import {
 } from '@mantine/core';
 import { login } from '@/actions/user/auth';
 import Error from '@/components/error/Error';
-import { LoginFormState } from '@/lib/definitions/auth/definitions';
+import { LoginFormState } from '@/lib/definitions/auth';
 
 export const DEFAULT_LOGIN_STATE: LoginFormState = {
   isError: false,
@@ -37,26 +38,30 @@ export default function Login() {
           overlayProps={{ radius: 'sm', blur: 2 }}
           loaderProps={{ color: 'var(--mantine-color-blue-6)', type: 'bars' }}
         />
-        <form action={action}>
+        <Form action={action}>
           <TextInput
+            name="email"
             label="Email"
             placeholder="your@email.com"
             data-testid="login-email"
             withAsterisk
             error={state?.errors?.email}
+            defaultValue={state?.data?.email}
           />
           <PasswordInput
+            name="password"
             label="Password"
             placeholder="Your password"
             data-testid="login-password"
             withAsterisk
             mt="md"
             error={state?.errors?.password}
+            defaultValue={state?.data?.password}
           />
           <Button disabled={pending} type="submit" fullWidth my="xl" data-testid="login-submit">
             Login
           </Button>
-        </form>
+        </Form>
         <Error isError={state?.isError} errorMessage={state?.message} />
       </Paper>
     </Container>

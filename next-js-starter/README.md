@@ -32,3 +32,21 @@ This template comes with the following features:
 ### Other scripts
 
 - `prettier:write` – formats all files with Prettier
+
+### Data Base
+
+[better-sqlite3](https://www.npmjs.com/package/better-sqlite3)
+
+[better-sqlite3-types](https://www.npmjs.com/package/@types/better-sqlite3)
+
+```console
+yarn add better-sqlite3
+
+yarn add @types/better-sqlite3 -D
+```
+
+Create `initdb.js` file and run
+
+```console
+node initdb.js
+```

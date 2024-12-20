@@ -1,12 +1,5 @@
 import { z } from 'zod';
-
-type User = {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-};
+import { User } from '@/lib/types/user';
 
 type Errors = {
   firstName?: string[];
@@ -42,7 +35,7 @@ export type RegisterFormState = {
   errors?: Errors;
   message?: string;
   isError: boolean;
-  data: User;
+  data: Omit<User, 'isLoggedIn'>;
 };
 
 export type LoginFormState = {
