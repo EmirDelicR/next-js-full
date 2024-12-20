@@ -1,5 +1,6 @@
 'use client';
 
+import { useActionState } from 'react';
 import {
   Box,
   Button,
@@ -11,26 +12,26 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { register } from '@/actions/user/auth';
 import Error from '@/components/error/Error';
 import HelpPopover from '@/components/popover/HelpPopover';
+import { RegisterFormState } from '../../../lib/definitions/auth/definitions';
 
-// interface FormFields {
-//   email: string;
-//   password: string;
-//   firstName: string;
-//   lastName: string;
-//   userName?: string;
-// }
-
-// const INITIAL_FORM_VALUES: FormFields = {
-//   firstName: '',
-//   lastName: '',
-//   userName: '',
-//   email: '',
-//   password: '',
-// };
+export const DEFAULT_REGISTER_STATE: RegisterFormState = {
+  message: '',
+  isError: false,
+  data: {
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    password: '',
+  },
+};
 
 export default function Register() {
+  const [state, action, pending] = useActionState(register, DEFAULT_REGISTER_STATE);
+
   return (
     <Container size={500} my={40}>
       <Title ta="center">Welcome aboard</Title>
@@ -38,18 +39,19 @@ export default function Register() {
       <Paper withBorder shadow="md" p={30} mt={30} radius="md" pos="relative">
         <LoadingOverlay
           data-testid="register-loading-overlay"
-          visible={false}
+          visible={pending}
           zIndex={1000}
           overlayProps={{ radius: 'sm', blur: 2 }}
           loaderProps={{ color: 'var(--mantine-color-blue-6)', type: 'bars' }}
         />
-        <form onSubmit={() => console.log('Register!')}>
+        <form action={action}>
           <TextInput
             label="Name"
             placeholder="Your first name"
             data-testid="register-first-name"
             withAsterisk
             mb="md"
+            error={state?.errors?.firstName}
           />
           <TextInput
             label="Surname"
@@ -57,6 +59,7 @@ export default function Register() {
             data-testid="register-last-name"
             withAsterisk
             mb="md"
+            error={state?.errors?.lastName}
           />
           <TextInput
             label="Username"
@@ -70,6 +73,7 @@ export default function Register() {
             data-testid="register-email"
             withAsterisk
             mb="md"
+            error={state?.errors?.email}
           />
           <Group justify="space-between" gap="sm" align="center">
             <Box flex={1} mih="85px">
@@ -78,15 +82,16 @@ export default function Register() {
                 placeholder="Your password"
                 data-testid="register-password"
                 withAsterisk
+                error={state?.errors?.password}
               />
             </Box>
-            <HelpPopover hintText="Password must contain minimum 8 characters,one number and one of this special signs !#$%&()*+,-/:;<=>?" />
+            <HelpPopover hintText="Password must contain minimum 8 characters,at least one letter, number and special character." />
           </Group>
-          <Button type="submit" fullWidth mt="my" data-testid="register-submit">
+          <Button disabled={pending} type="submit" fullWidth mt="my" data-testid="register-submit">
             Register
           </Button>
         </form>
-        <Error isError={false} />
+        <Error isError={false} errorMessage={state?.message} />
       </Paper>
     </Container>
   );
