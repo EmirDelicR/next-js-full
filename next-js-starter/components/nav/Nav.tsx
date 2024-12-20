@@ -5,7 +5,7 @@ import { NAV_ITEMS } from './navItems';
 
 export default function Nav() {
   return (
-    <Group>
+    <Group visibleFrom="md">
       {NAV_ITEMS.map((item) => (
         <NavLink key={item.label} href={item.link} icon={<item.icon size={14} />}>
           {item.label}
