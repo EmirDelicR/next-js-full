@@ -6,10 +6,8 @@ import { Button, LoadingOverlay, Paper, PasswordInput, TextInput } from '@mantin
 import { login } from '@/actions/user/auth';
 import Error from '@/components/error/Error';
 import { LoginFormState } from '@/lib/definitions/auth';
-import useAuth from '../useAuth';
 
 export const DEFAULT_LOGIN_STATE: LoginFormState = {
-  isSuccess: false,
   isError: false,
   data: {
     email: '',
@@ -19,8 +17,6 @@ export const DEFAULT_LOGIN_STATE: LoginFormState = {
 
 export default function Login() {
   const [state, action, pending] = useActionState(login, DEFAULT_LOGIN_STATE);
-
-  useAuth(state?.data?.email, state?.isSuccess);
 
   return (
     <Paper withBorder shadow="md" p={30} mt={30} radius="md" pos="relative">

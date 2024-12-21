@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GeneralFormState, User } from '@/lib/types/user';
+import { GeneralFormState, User } from '@/lib/definitions/user';
 
 type Errors = {
   firstName?: string[];

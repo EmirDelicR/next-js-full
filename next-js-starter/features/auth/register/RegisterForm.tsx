@@ -7,11 +7,9 @@ import { register } from '@/actions/user/auth';
 import Error from '@/components/error/Error';
 import HelpPopover from '@/components/popover/HelpPopover';
 import { RegisterFormState } from '@/lib/definitions/auth';
-import useAuth from '../useAuth';
 
 export const DEFAULT_REGISTER_STATE: RegisterFormState = {
   message: '',
-  isSuccess: false,
   isError: false,
   data: {
     firstName: '',
@@ -24,8 +22,6 @@ export const DEFAULT_REGISTER_STATE: RegisterFormState = {
 
 export default function Register() {
   const [state, action, pending] = useActionState(register, DEFAULT_REGISTER_STATE);
-
-  useAuth(state?.data?.email, state?.isSuccess);
 
   return (
     <Paper withBorder shadow="md" p={30} mt={30} radius="md" pos="relative">

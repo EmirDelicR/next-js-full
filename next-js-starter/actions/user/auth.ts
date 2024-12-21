@@ -1,15 +1,18 @@
 'use server';
 
-import { getUserByEmail, loginUser, saveUser } from '@/lib/db/db';
+import { redirect } from 'next/navigation';
+import { getUserByEmail, saveUser } from '@/lib/db/db';
 import {
   LoginFormSchema,
   LoginFormState,
   RegisterFormSchema,
   RegisterFormState,
 } from '@/lib/definitions/auth';
-import { LoggedIn } from '@/lib/types/user';
+import { createSession, deleteSession } from '@/lib/sessions/sessions';
 
 export async function register(state: RegisterFormState, formData: FormData) {
+  let redirectPath: string | null = null;
+
   const user = {
     firstName: formData.get('firstName') as string,
     lastName: formData.get('lastName') as string,
@@ -28,13 +31,10 @@ export async function register(state: RegisterFormState, formData: FormData) {
   }
 
   try {
-    await saveUser({ ...user, isLoggedIn: LoggedIn.logIn });
-
-    return {
-      ...state,
-      data: user,
-      isSuccess: true,
-    };
+    const userId = await saveUser({ ...user });
+    await createSession(userId);
+    redirectPath = '/settings';
+    return state;
   } catch (err) {
     return {
       ...state,
@@ -42,10 +42,15 @@ export async function register(state: RegisterFormState, formData: FormData) {
       isError: true,
       message: `${err}`,
     };
+  } finally {
+    if (redirectPath) {
+      redirect(redirectPath);
+    }
   }
 }
 
 export async function login(state: LoginFormState, formData: FormData) {
+  let redirectPath: string | null = null;
   const user = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -63,7 +68,7 @@ export async function login(state: LoginFormState, formData: FormData) {
   try {
     const dbUser = getUserByEmail(user.email);
 
-    if (!dbUser) {
+    if (!dbUser || !dbUser.id) {
       throw new Error('User not found.');
     }
 
@@ -71,13 +76,9 @@ export async function login(state: LoginFormState, formData: FormData) {
       throw new Error('Invalid password.');
     }
 
-    await loginUser(user.email);
-
-    return {
-      ...state,
-      data: user,
-      isSuccess: true,
-    };
+    await createSession(dbUser.id);
+    redirectPath = '/settings';
+    return state;
   } catch (err) {
     return {
       ...state,
@@ -85,5 +86,14 @@ export async function login(state: LoginFormState, formData: FormData) {
       isError: true,
       message: `${err}`,
     };
+  } finally {
+    if (redirectPath) {
+      redirect(redirectPath);
+    }
   }
+}
+
+export async function logout() {
+  deleteSession();
+  redirect('/login');
 }

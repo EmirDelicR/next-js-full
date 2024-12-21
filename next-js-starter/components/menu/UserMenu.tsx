@@ -10,8 +10,12 @@ import {
   MenuTarget,
   rem,
 } from '@mantine/core';
+import { verifySession } from '@/lib/sessions/sessions';
 
-export default function UserMenu() {
+export default async function UserMenu() {
+  const session = await verifySession();
+  console.log('session', session);
+
   return (
     <Menu
       shadow="md"
