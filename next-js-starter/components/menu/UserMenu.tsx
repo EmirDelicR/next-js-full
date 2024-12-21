@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { IconBriefcase2, IconLogout, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconBriefcase2, IconLogin, IconSettings, IconUser } from '@tabler/icons-react';
 import {
   ActionIcon,
   Menu,
@@ -11,11 +11,9 @@ import {
   rem,
 } from '@mantine/core';
 import { verifySession } from '@/lib/sessions/sessions';
+import Logout from '../link/Logout';
 
 export default async function UserMenu() {
-  const session = await verifySession();
-  console.log('session', session);
-
   return (
     <Menu
       shadow="md"
@@ -33,6 +31,18 @@ export default async function UserMenu() {
 
       <MenuDropdown>
         <MenuLabel>Application</MenuLabel>
+        <UserMenuItems />
+      </MenuDropdown>
+    </Menu>
+  );
+}
+
+async function UserMenuItems() {
+  const session = await verifySession();
+
+  if (session?.isAuth) {
+    return (
+      <>
         <MenuItem leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
           Settings
         </MenuItem>
@@ -44,13 +54,19 @@ export default async function UserMenu() {
           Work
         </MenuItem>
         <MenuDivider />
-        <MenuItem
-          color="red"
-          leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
-        >
-          Logout
-        </MenuItem>
-      </MenuDropdown>
-    </Menu>
+
+        <Logout />
+      </>
+    );
+  }
+
+  return (
+    <MenuItem
+      component={Link}
+      href="/auth"
+      leftSection={<IconLogin style={{ width: rem(14), height: rem(14) }} />}
+    >
+      Login
+    </MenuItem>
   );
 }
