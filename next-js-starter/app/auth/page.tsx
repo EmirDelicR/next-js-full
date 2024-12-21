@@ -1,5 +1,5 @@
 import { IconLogin, IconUser } from '@tabler/icons-react';
-import { Tabs, TabsList, TabsPanel, TabsTab } from '@mantine/core';
+import { Container, Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core';
 import Login from '@/features/auth/login/LoginForm';
 import Register from '@/features/auth/register/RegisterForm';
 
@@ -16,10 +16,16 @@ export default function AuthPage() {
       </TabsList>
 
       <TabsPanel value="login" pt="xs">
-        <Login />
+        <Container size={500} my={40}>
+          <Title ta="center">Welcome back</Title>
+          <Login />
+        </Container>
       </TabsPanel>
       <TabsPanel value="register" pt="xs">
-        <Register />
+        <Container size={500} my={40}>
+          <Title ta="center">Welcome aboard</Title>
+          <Register />
+        </Container>
       </TabsPanel>
     </Tabs>
   );

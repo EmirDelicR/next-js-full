@@ -13,3 +13,11 @@ export const LoggedIn = {
   logIn: 1,
   logOut: 0,
 } as const;
+
+export type GeneralFormState<D, E> = {
+  data: D;
+  isError: boolean;
+  isSuccess: boolean;
+  errors?: E;
+  message?: string;
+};

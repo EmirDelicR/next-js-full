@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { User } from '@/lib/types/user';
+import { GeneralFormState, User } from '@/lib/types/user';
 
 type Errors = {
   firstName?: string[];
@@ -31,16 +31,8 @@ export const LoginFormSchema = z.object({
   password: z.string().min(1, { message: 'Please enter password.' }).trim(),
 });
 
-export type RegisterFormState = {
-  errors?: Errors;
-  message?: string;
-  isError: boolean;
-  data: Omit<User, 'isLoggedIn'>;
-};
-
-export type LoginFormState = {
-  isError: boolean;
-  data: Pick<User, 'email' | 'password'>;
-  errors?: Pick<Errors, 'email' | 'password'>;
-  message?: string;
-};
+export type RegisterFormState = GeneralFormState<Omit<User, 'isLoggedIn'>, Errors>;
+export type LoginFormState = GeneralFormState<
+  Pick<User, 'email' | 'password'>,
+  Pick<Errors, 'email' | 'password'>
+>;

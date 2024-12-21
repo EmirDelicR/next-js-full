@@ -39,6 +39,8 @@ This template comes with the following features:
 
 [better-sqlite3-types](https://www.npmjs.com/package/@types/better-sqlite3)
 
+[better-sqlite3-helper](https://www.npmjs.com/package/better-sqlite3-helper)
+
 ```console
 yarn add better-sqlite3
 

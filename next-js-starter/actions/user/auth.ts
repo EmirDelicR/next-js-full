@@ -1,6 +1,5 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { getUserByEmail, loginUser, saveUser } from '@/lib/db/db';
 import {
   LoginFormSchema,
@@ -11,7 +10,6 @@ import {
 import { LoggedIn } from '@/lib/types/user';
 
 export async function register(state: RegisterFormState, formData: FormData) {
-  let redirectPath: string | null = null;
   const user = {
     firstName: formData.get('firstName') as string,
     lastName: formData.get('lastName') as string,
@@ -31,32 +29,27 @@ export async function register(state: RegisterFormState, formData: FormData) {
 
   try {
     await saveUser({ ...user, isLoggedIn: LoggedIn.logIn });
-    redirectPath = '/settings';
+
     return {
       ...state,
       data: user,
+      isSuccess: true,
     };
   } catch (err) {
     return {
       ...state,
       data: user,
       isError: true,
-      message: `An error occurred ${err}`,
+      message: `${err}`,
     };
-  } finally {
-    if (redirectPath) {
-      redirect(redirectPath);
-    }
   }
 }
 
 export async function login(state: LoginFormState, formData: FormData) {
-  let redirectPath: string | null = null;
   const user = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
   };
-
   const validatedFields = LoginFormSchema.safeParse(user);
 
   if (!validatedFields.success) {
@@ -79,21 +72,18 @@ export async function login(state: LoginFormState, formData: FormData) {
     }
 
     await loginUser(user.email);
-    redirectPath = '/settings';
+
     return {
       ...state,
       data: user,
+      isSuccess: true,
     };
   } catch (err) {
     return {
       ...state,
       data: user,
       isError: true,
-      message: `An error occurred ${err}`,
+      message: `${err}`,
     };
-  } finally {
-    if (redirectPath) {
-      redirect(redirectPath);
-    }
   }
 }
