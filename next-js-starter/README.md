@@ -112,3 +112,11 @@ Package for JWT token
 TypeScript-first schema validation with static type inference
 
 [NPM package](https://www.npmjs.com/package/zod)
+
+# TODO
+
+1. Add user profile page (rename setting to profile) with edit
+2. Add work page
+   2.1. use tenstack Table with pagination search and sort
+   2.2. add nested route for details
+3. Add community page
