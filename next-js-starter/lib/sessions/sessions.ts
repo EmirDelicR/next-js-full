@@ -2,25 +2,23 @@ import 'server-only';
 
 import { cache } from 'react';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { jwtVerify, SignJWT } from 'jose';
 import { Session, SessionPayload } from '@/lib/definitions/sessions';
 import { getUserById } from '../db/db';
 
-const secretKey = process.env.SESSION_SECRET;
-const encodedKey = new TextEncoder().encode(secretKey);
+const ENCODED_KEY = new TextEncoder().encode(process.env.SESSION_SECRET);
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(encodedKey);
+    .sign(ENCODED_KEY);
 }
 
 export async function decrypt(session: string | undefined = '') {
   try {
-    const { payload } = await jwtVerify(session, encodedKey, {
+    const { payload } = await jwtVerify(session, ENCODED_KEY, {
       algorithms: ['HS256'],
     });
     return payload;
@@ -35,7 +33,7 @@ export const verifySession = cache(async (): Promise<Session> => {
   const session = await decrypt(cookie);
 
   if (!session?.userId) {
-    redirect('/auth');
+    return { isAuth: false, userId: undefined };
   }
 
   return { isAuth: true, userId: session?.userId as number };
@@ -62,7 +60,7 @@ export async function deleteSession() {
 
 export const getUserFromSession = cache(async () => {
   const session = (await verifySession()) as Session;
-  if (!session) {
+  if (!session || !session.userId) {
     return null;
   }
 

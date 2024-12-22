@@ -9,6 +9,7 @@ import {
   RegisterFormState,
 } from '@/lib/definitions/auth';
 import { createSession, deleteSession } from '@/lib/sessions/sessions';
+import { hashPassword, verifyPassword } from '@/lib/utils/password/password';
 
 export async function register(state: RegisterFormState, formData: FormData) {
   let redirectPath: string | null = null;
@@ -31,7 +32,8 @@ export async function register(state: RegisterFormState, formData: FormData) {
   }
 
   try {
-    const userId = await saveUser({ ...user });
+    const hashedPassword = await hashPassword(user.password);
+    const userId = await saveUser({ ...user, password: hashedPassword });
     await createSession(userId);
     redirectPath = '/settings';
     return state;
@@ -72,7 +74,9 @@ export async function login(state: LoginFormState, formData: FormData) {
       throw new Error('User not found.');
     }
 
-    if (user.password !== dbUser.password) {
+    const isPasswordMatch = await verifyPassword(dbUser.password, user.password);
+
+    if (!isPasswordMatch) {
       throw new Error('Invalid password.');
     }
 

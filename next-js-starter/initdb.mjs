@@ -1,15 +1,12 @@
+import nextEnv from '@next/env';
+import { hash } from 'argon2';
 import sql from 'better-sqlite3';
 
-const db = sql('example.db');
+const projectDir = process.cwd();
+nextEnv.loadEnvConfig(projectDir);
+const SECRET = Buffer.from(`${process.env.AUTH_PASSWORD_SALT}`, 'utf-8');
 
-export const EXAMPLE_USER = {
-  firstName: 'John',
-  lastName: 'Doo',
-  userName: 'Cabal',
-  email: 'john@doo.com',
-  password: 'Test123!',
-  isLoggedIn: 0,
-};
+const db = sql('example.db');
 
 db.prepare(
   `
@@ -26,6 +23,15 @@ db.prepare(
 ).run();
 
 async function initData() {
+  const EXAMPLE_USER = {
+    firstName: 'John',
+    lastName: 'Doo',
+    userName: 'Cabal',
+    email: 'john@doo.com',
+    password: await hash('Test123!', { secret: SECRET }),
+    isLoggedIn: 0,
+  };
+
   db.prepare(
     `
       INSERT INTO users VALUES (
@@ -39,6 +45,8 @@ async function initData() {
       )
    `
   ).run(EXAMPLE_USER);
+
+  db.close();
 }
 
 initData();

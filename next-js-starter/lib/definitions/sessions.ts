@@ -7,5 +7,5 @@ export interface SessionPayload extends JWTPayload {
 
 export type Session = {
   isAuth: boolean;
-  userId: number;
+  userId: number | undefined;
 };
