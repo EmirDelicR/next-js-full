@@ -1,18 +1,19 @@
+'use client';
+
 import { IconLogout } from '@tabler/icons-react';
-import { Button, rem } from '@mantine/core';
+import { MenuItem, MenuItemProps, rem } from '@mantine/core';
 import { logout } from '@/actions/user/auth';
 
-export default function Logout() {
+export default function MenuItemLogout(props: MenuItemProps) {
   return (
-    <Button
+    <MenuItem
       variant="subtle"
       color="red"
       leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
       onClick={logout}
-      fullWidth
-      justify="left"
+      {...props}
     >
       Logout
-    </Button>
+    </MenuItem>
   );
 }

@@ -98,6 +98,6 @@ export async function login(state: LoginFormState, formData: FormData) {
 }
 
 export async function logout() {
-  deleteSession();
+  await deleteSession();
   redirect('/auth');
 }

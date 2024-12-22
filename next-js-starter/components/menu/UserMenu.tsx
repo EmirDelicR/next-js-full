@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { IconBriefcase2, IconLogin, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconUser } from '@tabler/icons-react';
 import {
   ActionIcon,
   Menu,
@@ -11,7 +11,8 @@ import {
   rem,
 } from '@mantine/core';
 import { verifySession } from '@/lib/sessions/sessions';
-import Logout from '../link/Logout';
+import MenuItemLogout from './MenuItemLogout';
+import { MENU_ITEMS } from './menuItems';
 
 export default async function UserMenu() {
   return (
@@ -22,6 +23,7 @@ export default async function UserMenu() {
       offset={20}
       withArrow
       arrowPosition="center"
+      closeOnItemClick
     >
       <MenuTarget>
         <ActionIcon size={34} variant="light" radius="xl" aria-label="User-menu">
@@ -39,34 +41,21 @@ export default async function UserMenu() {
 
 async function UserMenuItems() {
   const session = await verifySession();
-
-  if (session?.isAuth) {
-    return (
-      <>
-        <MenuItem leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-          Settings
-        </MenuItem>
-        <MenuItem
-          component={Link}
-          href="/work"
-          leftSection={<IconBriefcase2 style={{ width: rem(14), height: rem(14) }} />}
-        >
-          Work
-        </MenuItem>
-        <MenuDivider />
-
-        <Logout />
-      </>
-    );
-  }
+  const items = session?.isAuth ? MENU_ITEMS.loggedIn : MENU_ITEMS.default;
 
   return (
-    <MenuItem
-      component={Link}
-      href="/auth"
-      leftSection={<IconLogin style={{ width: rem(14), height: rem(14) }} />}
-    >
-      Login
-    </MenuItem>
+    <>
+      {items.map((item) => (
+        <MenuItem
+          component={Link}
+          href={item.link}
+          leftSection={<item.icon style={{ width: rem(14), height: rem(14) }} />}
+        >
+          {item.label}
+        </MenuItem>
+      ))}
+      <MenuDivider display={session.isAuth ? 'block' : 'none'} />
+      <MenuItemLogout display={session.isAuth ? 'flex' : 'none'} />
+    </>
   );
 }
